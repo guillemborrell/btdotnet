@@ -2,7 +2,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import oauth
 
-from login import OAuthHandler, OAuthClient
+from oauth import OAuth
 
 
 class MainPage(webapp.RequestHandler): 
@@ -14,33 +14,9 @@ class MainPage(webapp.RequestHandler):
         <p>Hello, webapp World!</p>
         ''')
 
-        client = OAuthClient('twitter', self)       
-            
-        if not client.get_cookie():
-            self.response.out.write('''
-                <p><a href="/oauth/twitter/login">Login via Twitter</a> {}</p>
-                '''.format(client.get_cookie()))
-#             self.response.out.write('''
-#             </body>
-#             </html>''')
-            
-            
-        try:
-            user = oauth.get_current_user()
-            self.response.write('<p>{}</p>'.format(user.nickname()))
-            
-        except oauth.OAuthRequestError:
-            self.response.write('<p>no oauuuuuuuuuth</p>')
-        
-            
-        self.response.out.write(
-            '<a href="/oauth/twitter/logout">Logout from Twitter</a><br /><br />'
-            )
-        
-#         info = client.get('/account/verify_credentials')
-#         
-#         self.response.out.write("<p>Screen name: {}</p>".format(info["screen_name"]))
-#         self.response.out.write("<p>Location: {}</p>".format(info["location"]))
+        auth = OAuth('http://betweetdotnet.appspot.com')       
+        auth.get_tokens()
+        self.response.out.write('<p><a href="{}">Login</a></p>'.format(auth.auth['auth_url']))
 #             
         self.response.out.write('''
             </body>
@@ -52,7 +28,6 @@ class MainPage(webapp.RequestHandler):
 
 
 application = webapp.WSGIApplication([
-    ('/oauth/(.*)/(.*)', OAuthHandler),
     ('/', MainPage)], debug=True)
 
 
