@@ -4,12 +4,20 @@ Created on Jul 20, 2013
 @author: guillem
 '''
 from twython import Twython
+from google.appengine.ext import ndb
 
+
+class Session(ndb.Model):
+    oauth_token = ndb.StringProperty()
+    oauth_token_secret = ndb.StringProperty()
+    oauth_verifier = ndb.StringProperty()
+    timestamp = ndb.DateTimeProperty(auto_now_add=True)
+    
+    
 
 class OAuth(object):
     def __init__(self,callback_url):
-        self.APP_KEY = 'dmyD2CHHePKQ6M7bQJg3wQ'
-        self.APP_SECRET = 'tAsyLFGu9GIuYluUbNjqmv29Cg0VifK5w8yIKFrmo'
+
         self.twitter = Twython(self.APP_KEY, self.APP_SECRET)
         self.callback_url = callback_url
         self.auth = None
