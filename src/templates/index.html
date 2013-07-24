@@ -11,7 +11,13 @@
 	<script type="text/javascript" src="/js/form-creator.js"></script>
 </head>
 <body>
-  
+
+{% if auth == 'LOGGED_IN' %}
+<p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"</p>
+{% else %}
+<p><a href="{{ var }}">Login</a></p>
+{% endif %}
+
 <div id="wrapper">
   <h1>Crea una apuesta</h1>
   {% raw %}
