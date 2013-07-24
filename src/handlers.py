@@ -1,7 +1,14 @@
 # Handlers for forms and bets.
 import webapp2
+import jinja2
+import os
 from webapp2_extras import sessions
 from oauth import session_auth
+
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'])   
 
 
 class BaseHandler(webapp2.RequestHandler):
@@ -26,24 +33,12 @@ class MainPage(BaseHandler):
             self.request, 
             'http://betweetdotnet.appspot.com')
 
+        template_values = {'auth': auth,
+                           'var': var,
+                           }
 
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.out.write('''
-        <html>
-        <body>
-        <p>Hello, World!</p>
-        ''')
-
-        if auth == 'ANONYMOUS':
-            self.response.out.write('<p><a href="{}">Log in</a></p>'.format(var))
-        elif auth == 'LOGGED_IN':
-            self.response.out.write('<p>Logged in as {}</p>'.format(var['screen_name']))
-        else:
-            self.response.out.write('<p>Something wrong happened {}</p>'.format(auth))
-        self.response.out.write('''
-        </body>
-        </html>''')
-
+        template = JINJA_ENVIRONMENT.get_template('./templates/index.html')
+        self.response.write(template.render(template_values))
         
     def post(self):
         print self.request.get('arg')
