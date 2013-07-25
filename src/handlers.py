@@ -26,19 +26,36 @@ class BaseHandler(webapp2.RequestHandler):
         return self.session_store.get_session()
 
 
-class MainPage(BaseHandler):     
+class FormPage(BaseHandler):     
     def get(self):
         auth, var = session_auth(
             self.session,
             self.request, 
-            'http://betweetdotnet.appspot.com')
+            'http://betweetdotnet.appspot.com/form')
 
         template_values = {'auth': auth,
                            'var': var,
+                           'key': self.session.get('key')
                            }
 
-        template = JINJA_ENVIRONMENT.get_template('./templates/index.html')
+        template = JINJA_ENVIRONMENT.get_template('./templates/form.html')
         self.response.write(template.render(template_values))
         
     def post(self):
         print self.request.get('arg')
+        
+
+class EntryPage(BaseHandler):
+    def get(self):
+        auth, var = session_auth(
+            self.session,
+            self.request,
+            'http://betweetdotnet.appspot.com')
+        
+        template_values = {'auth': auth,
+                           'var': var,
+                           'key': self.session.get('key')
+                           }
+        template = JINJA_ENVIRONMENT.get_template('./templates/index.html')
+        self.response.write(template.render(template_values))
+        

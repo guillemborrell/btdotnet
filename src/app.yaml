@@ -10,7 +10,7 @@ handlers:
 - url: /img
   static_dir: img
 - url: /.*
-  script: helloworld.py
+  script: main.py
 
 
 libraries:

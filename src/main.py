@@ -1,7 +1,7 @@
 import webapp2
 
 from google.appengine.ext.webapp.util import run_wsgi_app
-from handlers import MainPage
+from handlers import EntryPage, FormPage
 
 config ={}
 config['webapp2_extras.sessions'] = {
@@ -10,8 +10,11 @@ config['webapp2_extras.sessions'] = {
     'cookie_args': {'max_age': 30*24*3600},
     }
 
-application = webapp2.WSGIApplication([
-    ('/', MainPage)], debug=True, config = config)
+application = webapp2.WSGIApplication(
+    [
+     ('/', EntryPage),
+     ('/form', FormPage),
+     ], debug=True, config = config)
 
 
 def main():
