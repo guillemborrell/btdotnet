@@ -31,16 +31,16 @@ class FormPage(BaseHandler):
         auth, var = session_auth(
             self.session,
             self.request, 
-            'http://betweetdotnet.appspot.com/form')
-
+            'http://betweetdotnet.appspot.com/new')
+ 
         template_values = {'auth': auth,
                            'var': var,
                            'key': self.session.get('key')
                            }
-
+ 
         template = JINJA_ENVIRONMENT.get_template('./templates/form.html')
         self.response.write(template.render(template_values))
-        
+         
     def post(self):
         print self.request.get('arg')
         
@@ -58,4 +58,10 @@ class EntryPage(BaseHandler):
                            }
         template = JINJA_ENVIRONMENT.get_template('./templates/index.html')
         self.response.write(template.render(template_values))
+        
+class BetPage(BaseHandler):
+    def get(self):
+        self.response.out.write('This is a bet')
+    
+
         
