@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es" data-ng-app="">
+	<head>
+		<meta charset="utf-8">
+		<title>My HTML Angularjs test</title>
+		<link rel="stylesheet" href="./css/bootstrap.css" type="text/css" />
+		
+		<script src="./js/angular.js"></script>
+		<script src="./js/controllers.js"></script>
+		<script src="./js/jquery.js"></script>
+		<script src="./js/bootstrap.js"></script>
+	</head>
+	
+	<body>
+
+		<div ng-controller="FieldListCtrl">
+			<input type="text" ng-model="text" placeholder="texto del mensaje"><br/>
+			<input type="text" ng-model="hashtag" placeholder="hashtag">
+			
+			
+			<form ng-submit="addField()">
+				<input type="text"
+					ng-model="formDescription"
+					size="30"
+					placeholder="Description for the field">
+				<input type="text"
+					ng-model="formValue"
+					size="30"
+					placeholder="Value of the field">
+				<input class="" type="submit" value="add">
+			</form>
+
+
+			<p>Y eso se ve tal que así:</p>
+			<p>{{ text }}  #{{ hashtag }}. {{ 140-count() }}/140</p>
+			<p ng-repeat="field in fields">
+				<input type="checkbox" ng-model="field.Marked">				
+				{{ field.Descr }}
+				<select>
+					<option ng-repeat="choice in field.Val" value="choice">
+						{{ choice }}
+					</option>
+				</select>
+			</p>
+			
+			<form ng-submit="cleanFields()">
+			<input class="btn btn-danger" type="submit" value="Delete Selected">
+			</form>
+		</div>
+
+
+
+	</body>
+</html>
