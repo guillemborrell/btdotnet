@@ -30,12 +30,13 @@ def session_auth(session,request,this_url):
                 session_data.oauth_token = final_step['oauth_token']
                 session_data.oauth_token_secret = final_step['oauth_token_secret']
                 session_data.oauth_verifier = oauth_verifier
-                key = session_data.put()
-                session['key'] = key.urlsafe()
                 auth = Twython(APP_KEY, APP_SECRET,
                                session_data.oauth_token,
                                session_data.oauth_token_secret)
                 credentials = auth.verify_credentials()
+                session_data.username=credentials['screen_name']
+                key = session_data.put()
+                session['key'] = key.urlsafe()
                 return 'LOGGED_IN', credentials
                     
             # If the tokens are not equal, an exception is raised.
@@ -74,14 +75,9 @@ class Session(ndb.Model):
     oauth_verifier = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(auto_now_add=True)
     username = ndb.StringProperty()
-    
 
-class OAuth(object):
-    def __init__(self,callback_url):
+   
+def check_username(key,username):
+    session = ndb.Key(url_safe=key).get()
+    return session.username == username
 
-        self.twitter = Twython(self.APP_KEY, self.APP_SECRET)
-        self.callback_url = callback_url
-        self.auth = None
-        
-    def get_tokens(self):
-        self.auth = self.twitter.get_authentication_tokens(self.callback_url)

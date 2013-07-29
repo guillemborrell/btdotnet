@@ -12,12 +12,13 @@ function Process(s){
 	}
 }
 
-function FieldListCtrl($scope){
+function FieldListCtrl($scope,$http){
 	$scope.hashtag = "";
 	$scope.text = "";
 	$scope.duration = "";
 	$scope.urlID = "";
-	
+	$scope.username = username;
+	$scope.key = key;
 	$scope.count = function(){
 		return $scope.text.length + $scope.hashtag.length +2;
 	}
@@ -52,6 +53,25 @@ function FieldListCtrl($scope){
 				}
 			}
 		)
+	}
+	
+	$scope.submitFields = function() {
+		var cleanFields = [];
+		angular.forEach($scope.fields, function(field){
+				clean.Fields.push({Desc: field.Desc,
+									Val: field.Val});
+			}
+		)
+		var data = {
+			creator: username,
+			duration: $scope.duration,
+			hashtag: $scope.hashtag,
+			fields: cleanFields,
+			authenticated: 1
+		};
+		$http.post("http://betweetdotnet.appspot.com/field",
+				data);
+		window.location("http://betweetdotnet.appspot.com");
 	}
 }
 
