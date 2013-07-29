@@ -16,6 +16,7 @@ function FieldListCtrl($scope){
 	$scope.hashtag = "";
 	$scope.text = "";
 	$scope.duration = "";
+	$scope.urlID = "";
 	
 	$scope.count = function(){
 		return $scope.text.length + $scope.hashtag.length +2;

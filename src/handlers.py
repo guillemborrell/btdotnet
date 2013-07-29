@@ -59,9 +59,24 @@ class EntryPage(BaseHandler):
         template = JINJA_ENVIRONMENT.get_template('./templates/index.html')
         self.response.write(template.render(template_values))
         
-class BetPage(BaseHandler):
-    def get(self):
-        self.response.out.write('This is a bet')
-    
+                    
 
+class LogoutPage(BaseHandler):
+    def get(self):
+        auth, var = session_auth(
+            self.session,
+            self.request,
+            'http://betweetdotnet.appspot.com/logout'
+            )
+        
+        key = self.session.get('key')
+        
+        self.session['key'] = ''
+        
+        template_values = {'auth': auth,
+                           'var': var,
+                           'key': key
+                           }
+        template = JINJA_ENVIRONMENT.get_template('./templates/logout.html')
+        self.response.out.write(template.render(template_values))
         
