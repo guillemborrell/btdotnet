@@ -14,39 +14,39 @@
 
 {% if auth == 'LOGGED_IN' %}
 <p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"></p>
-		<script type="text/javascript">
-			var username="{{ var.get('screen_name')}}";
-			var key="{{ key }}";
-		</script>
 {% else %}
 <p><a href="{{ var }}">Login</a></p>
-		<script type="text/javascript">
-			var username="ANON";
-			var key="";
-		</script>
+
 {% endif %}
+
+<p>{{ thisform['description'] }}</p>
+<p>{{ thisform['until'] }}</p>
+
+<div ng-controller="fieldCtrl">
+<form name="bet" ng-submit="submitBet()">
+<input type="hidden" name="numfields" value="{{ thisform['fields'] | length }}">
+<input type="hidden" name="form_key" value="{{ thisform['key'] }}">
 
 {% if auth == 'LOGGED_IN' %}
-<p>You are logged in, you can create <a href="/new">forms</a></p>
-
-{% raw %}
-<div ng-controller="indexCtrl">
-	<h2>Last bet forms created</h2>
-	<ul ng-repeat="form in forms">
-		<li> <a href="http://betweetdotnet.appspot.com/viewform?key={{ form.key  }}">{{ form.description }}</a> </li>
-		<ul> Valid until {{ form.until | date:'MM/dd/yyyy @ h:mma' }} </ul>
-	</ul>
-	<h2>Last bets done</h2>
-	<ul ng-repeat="bet in bets">
-		<li>{{ bet.description }}, {{ bet.time | date:'MM/dd/yyyy @ h:mma' }}</li>
-	</ul>
-</div>
-{% endraw %}
-
+<input type="hidden" name="username" value="{{ var.get('screen_name') }}">
 {% else %}
-<p>Well, you can still vote</p>
+<input type="hidden" name="username" value="">
 {% endif %}
 
+{% for field in thisform['fields'] %}
+{{ field['Descr'] }}
+<select name="{{ field['name'] }}">
+{% for v in field['Val'] %}
+<option>
+{{ v }}
+</option>
+{% endfor %}
+</select>
+{% endfor %}
+<input class="btn btn-success" type="submit" value="Bet">
+</form>
+</div>
+<p>{{ thisform['info'] }}</p>
 
 </body>
 </html>

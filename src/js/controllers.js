@@ -19,6 +19,7 @@ function FieldListCtrl($scope,$http){
 	$scope.urlID = "";
 	$scope.username = username;
 	$scope.key = key;
+	$scope.info = "";
 	
 	$scope.count = function(){
 		return $scope.description.length + $scope.hashtag.length +2;
@@ -69,10 +70,17 @@ function FieldListCtrl($scope,$http){
 			duration: $scope.duration,
 			hashtag: $scope.hashtag,
 			fields: cleanFields,
+			info: $scope.info,
 			authenticated: 1
 		};
-		$http.post("http://betweetdotnet.appspot.com/restform",data);
-		window.location = "http://betweetdotnet.appspot.com";
+
+		$http.post(
+				"http://betweetdotnet.appspot.com/restform",data
+				).success(function(data,status,headers,config) {
+					window.location = "http://betweetdotnet.appspot.com";
+				}).error(function(data,status,headers,config) {
+					window.location = document.URL;
+				})
 	}
 }
 
@@ -83,4 +91,37 @@ function indexCtrl($scope, $http){
 				$scope.forms = data	;
 			}
 		)
+	$scope.get_data1 = $http.get(
+		"http://betweetdotnet.appspot.com/restbet/fromuser?user="+username
+		).success(function(data,status,headers,config) {
+			$scope.bets = data;
+		})
 	}
+
+function fieldCtrl($scope, $http){
+	$scope.submitBet = function() {
+		fields = [];
+		numforms = parseInt(document.forms['bet'].numfields.value);
+		form_key = document.forms['bet'].form_key.value;
+		username = document.forms['bet'].username.value;
+		
+		for (i=3; i< 3+numforms; i++){
+			fields.push([document.forms['bet'][i].name, document.forms['bet'][i].value]);
+		}
+		data = {form_key: form_key,
+				user: username,
+				fields: fields};
+		
+		console.log(data);
+		
+		$http.post(
+			"http://betweetdotnet.appspot.com/restbet",data
+			).success(function(data,status,headers,config) {
+				window.location = "http://betweetdotnet.appspot.com";
+			}).error(function(data,status,headers,config) {
+				window.location = document.URL;
+			})
+	
+	}
+}
+

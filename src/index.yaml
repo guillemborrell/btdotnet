@@ -10,6 +10,18 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Bet
+  properties:
+  - name: user
+  - name: time
+    direction: desc
+
+- kind: Bet
+  ancestor: yes
+  properties:
+  - name: time
+    direction: desc
+
 - kind: Form
   properties:
   - name: creator

@@ -2,6 +2,7 @@
 import webapp2
 import jinja2
 import os
+from google.appengine.ext import ndb
 from webapp2_extras import sessions
 from oauth import session_auth
 
@@ -59,7 +60,29 @@ class EntryPage(BaseHandler):
         template = JINJA_ENVIRONMENT.get_template('./templates/index.html')
         self.response.write(template.render(template_values))
         
-                    
+
+class ViewFormPage(BaseHandler):
+    def get(self):
+        formkey = self.request.get('key')
+        if formkey:
+            thisform = ndb.Key(urlsafe=formkey).get()
+            lastbets = thisform.last_bets()
+            auth,var = session_auth(
+                self.session,
+                self.request,
+                'http://betweetdotnet.appspot.com/viewform?key={}'.format(formkey))
+            template_values = {'auth': auth,
+                               'var': var,
+                               'thisform': thisform.to_dict_key(),
+                               'lastbets': lastbets,
+                               'key': self.session.get('key')
+                               }
+            template = JINJA_ENVIRONMENT.get_template('./templates/viewform.html')
+            self.response.write(template.render(template_values))
+            
+        else:
+            self.abort(404)
+                   
 
 class LogoutPage(BaseHandler):
     def get(self):

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es" data-ng-app="">
+	<head>
+		<meta content="text/html; charset=UTF-8">
+		<title>Betweet.net - La red de apuestas gratuita.</title>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" type="text/css" />
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+		<script src="/js/controllers.js"></script>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+	</head>
+	
+	<body>
+<!-- 		Passing authentication variables as global variables to javascript -->
+		{% if auth == 'LOGGED_IN' %}		
+		<script type="text/javascript">
+			var username="{{ var.get('screen_name')}}";
+			var key="{{ key }}";
+		</script>
+		<p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"></p>
+		{% else %}
+		<script type="text/javascript">
+			var username="ANON";
+			var key="";
+		</script>
+		<p><a href="{{ var }}">Login</a></p>
+		{% endif %}
+		
+<!-- 		Start raw section of Angularjs directives. Those are incompatible with Jinja2. -->
+		{% raw %}	
+		<div ng-controller="FieldListCtrl">
+			<input type="text"
+					ng-model="description"
+					placeholder="Description"
+					accept-charset="UTF-8"><br/>
+			<input type="text"
+					ng-model="hashtag"
+					placeholder="hashtag"
+					accept-charset="UTF-8"><br/>
+			<input type="number" ng-model="duration" placeholder="hours active"><br/>
+			
+			
+			<form ng-submit="addField()">
+				<input type="text"
+					ng-model="formDescription"
+					size="30"
+					placeholder="Description for the field"
+					accept-charset="UTF-8">
+				<input type="text"
+					ng-model="formValue"
+					size="30"
+					placeholder="Value of the field"
+					accept-charset="UTF-8">
+				<input class="" type="submit" value="add">
+			</form>
+			
+			<input type="text" cols="60" rows="5" ng-model="info"
+				placeholder="Info" accept-charset="UTF-8">
+
+
+			<p>Y eso se ve tal que así:</p>
+			<p>{{ description }}  #{{ hashtag }}. {{ 140-count() }}/140</p>
+			<p ng-repeat="field in fields">
+				<input type="checkbox" ng-model="field.Marked">				
+				{{ field.Descr }}
+				<select>
+					<option ng-repeat="choice in field.Val" value="choice">
+						{{ choice }}
+					</option>
+				</select>
+			</p>
+			
+			<form ng-submit="cleanFields()">
+			<input class="btn btn-danger" type="submit" value="Delete Selected">
+			</form>
+			<form ng-submit="submitFields()">
+			<input class="btn btn-success" type="submit" value="Create Bet">
+			</form>
+		</div>
+		{% endraw %}
+
+	</body>
+</html>

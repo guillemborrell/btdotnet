@@ -34,7 +34,9 @@ def session_auth(session,request,this_url):
                                session_data.oauth_token,
                                session_data.oauth_token_secret)
                 credentials = auth.verify_credentials()
-                session_data.username=credentials['screen_name']
+                session_data.username = credentials['screen_name']
+                session_data.name = credentials['name']
+                session_data.avatar = credentials['profile_image_url']
                 key = session_data.put()
                 session['key'] = key.urlsafe()
                 return 'LOGGED_IN', credentials
@@ -44,10 +46,13 @@ def session_auth(session,request,this_url):
                 return 'ERROR', None
         
         elif session_data.oauth_verifier:
-            auth = Twython(APP_KEY, APP_SECRET,
-            session_data.oauth_token,
-            session_data.oauth_token_secret)
-            credentials = auth.verify_credentials()
+            # auth = Twython(APP_KEY, APP_SECRET,
+            # session_data.oauth_token,
+            # session_data.oauth_token_secret)
+            # credentials = auth.verify_credentials()
+            credentials = {'screen_name': session_data.username,
+                           'name': session_data.name,
+                           'profile_image_url': session_data.avatar}
             return 'LOGGED_IN', credentials
         
         else:
@@ -75,6 +80,8 @@ class Session(ndb.Model):
     oauth_verifier = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(auto_now_add=True)
     username = ndb.StringProperty()
+    name = ndb.StringProperty()
+    avatar = ndb.StringProperty()
 
    
 def check_username(key,username):

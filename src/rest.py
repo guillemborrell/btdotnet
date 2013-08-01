@@ -3,7 +3,7 @@
 import webapp2
 import datetime
 import json
-from models import Form
+from models import Form, Bet
 from google.appengine.ext import ndb
 import logging
 
@@ -20,7 +20,6 @@ class FormView(webapp2.RequestHandler):
             self.abort(404)
         
     def post(self):
-        logging.info(self.request.body)
         try:
             jsondata = json.loads(self.request.body)
         except UnicodeDecodeError:
@@ -30,12 +29,21 @@ class FormView(webapp2.RequestHandler):
 
         form = Form()
         
+        procfields = []
+        for i,f in enumerate(jsondata['fields']):
+            procfields.append({
+                'name': 'field{}'.format(i),
+                'Descr': f['Descr'],
+                'Val': f['Val']
+                })
+        
         form.creator = jsondata['creator']
         form.until = datetime.datetime.now() + datetime.timedelta(hours=jsondata['duration'])
         form.hashtag = jsondata['hashtag']
-        form.fields = jsondata['fields']
+        form.fields = procfields
         form.description = jsondata['description']
         form.authenticated = bool(jsondata['authenticated']) 
+        form.info = jsondata['info']
 
         form.put()
         
@@ -92,3 +100,56 @@ class FormAllBets(webapp2.RequestHandler):
                 self.abort(404)
         else:
             self.abort(404)    
+
+class BetView(webapp2.RequestHandler):
+    def get(self):
+        if self.request.get('key'):
+            bet = ndb.Key(urlsafe = self.request.get('key')).get()
+            if bet:
+                self.response.headers['Content-Type'] = 'application/json'
+                self.response.out.write(bet.to_dict_key())
+                
+            else:
+                self.abort(404)
+        else:
+            self.abort(404)
+            
+    def post(self):
+        try:
+            jsondata = json.loads(self.request.body)
+        except UnicodeDecodeError:
+            jsondata = json.loads(self.request.body,encoding='latin-1')
+
+        if jsondata['user']:
+            user = jsondata['user']
+            auth = True
+        else:
+            user = '';
+            auth = False
+
+        formkey = ndb.Key(urlsafe=jsondata['form_key'])
+        form = formkey.get()
+
+        bet = Bet(parent = formkey,
+                  description = form.description,
+                  user = user,
+                  fields = jsondata['fields'],
+                  authenticated = auth)
+        
+        bet.put()
+        
+
+class BetFromUser(webapp2.RequestHandler):
+    def get(self):
+        if self.request.get('user'):
+            creator = self.request.get('user')
+            forms = Bet.from_user(creator)
+        
+            if forms:
+                betslist = json.dumps([f.to_dict_key() for f in forms])
+                self.response.headers['Content-Type'] = 'application/json'
+                self.response.out.write(betslist)
+            else:
+                self.abort(404)
+        else:
+            self.abort(404)

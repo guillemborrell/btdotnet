@@ -17,8 +17,10 @@ class Form(ndb.Model):
     hashtag= ndb.StringProperty(required=True)
     fields = ndb.JsonProperty(required=True)
     authenticated = ndb.BooleanProperty(required=True)
+    info = ndb.TextProperty()
 
     def to_dict_key(self):
+
         d = {}
         d['key'] = self.key.urlsafe()
         d['creator'] = self.creator
@@ -28,6 +30,7 @@ class Form(ndb.Model):
         d['hashtag'] = self.hashtag
         d['fields'] = self.fields
         d['authenticated'] = self.authenticated
+        d['info'] = self.info
         d['bets'] = self.number_of_bets()
         
         return d
@@ -59,26 +62,37 @@ class Bet(ndb.Model):
     '''
     Models a bet. Parent is the Form
     '''
+    description = ndb.StringProperty(required=True)
     user = ndb.StringProperty(required=True)
     authenticated = ndb.BooleanProperty(required=True)
     time = ndb.DateTimeProperty(auto_now_add=True)
     fields = ndb.JsonProperty(required=True)
-    
+
     @classmethod
-    def to_dict_key(cls):
+    def from_user(cls,name):
+        return cls.query(
+            cls.user == name
+            ).order(-cls.time).fetch(5)
+    
+    def to_dict_key(self):
         d = {}
-        d['user'] = cls.user
-        d['authenticated'] = cls.authenticated
-        d['time'] = cls.time.isoformat()
-        d['fields'] = cls.fields
+        d['user'] = self.user
+        d['authenticated'] = self.authenticated
+        d['time'] = self.time.isoformat()
+        d['fields'] = self.fields
+        d['description'] = self.description
         
         return d
     
     @classmethod
     def query_form(cls, ancestor_key, num=10):
-        return cls.query(
-            ancestor=ancestor_key
-            ).order(-cls.time).fetch(10)
+        try:
+            bets = cls.query(
+                ancestor=ancestor_key
+                ).order(-cls.time).fetch(10)
+        except NeedIndexError:
+            bets = []
+        return bets
     
     @classmethod
     def count_form(cls, ancestor):
