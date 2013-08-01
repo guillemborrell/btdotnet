@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import webapp2
 import datetime
 import json
@@ -18,7 +20,12 @@ class FormView(webapp2.RequestHandler):
             self.abort(404)
         
     def post(self):
-        jsondata = json.loads(self.request.body)
+        logging.info(self.request.body)
+        try:
+            jsondata = json.loads(self.request.body)
+        except UnicodeDecodeError:
+            jsondata = json.loads(self.request.body,encoding='latin-1')
+
         logging.info(jsondata.keys())
 
         form = Form()
@@ -27,6 +34,7 @@ class FormView(webapp2.RequestHandler):
         form.until = datetime.datetime.now() + datetime.timedelta(hours=jsondata['duration'])
         form.hashtag = jsondata['hashtag']
         form.fields = jsondata['fields']
+        form.description = jsondata['description']
         form.authenticated = bool(jsondata['authenticated']) 
 
         form.put()
@@ -39,8 +47,9 @@ class FormFromCreator(webapp2.RequestHandler):
             forms = Form.from_creator(creator)
         
             if forms:
+                betslist = json.dumps([f.to_dict_key() for f in forms])
                 self.response.headers['Content-Type'] = 'application/json'
-                self.response.out.write(json.dumps([f.to_dict_key() for f in forms]))
+                self.response.out.write(betslist)
             else:
                 self.abort(404)
         else:
@@ -56,13 +65,14 @@ class FormLastBets(webapp2.RequestHandler):
                 if bets:
                     betslist = json.dumps([b.to_dict_key() for b in bets])
                     self.response.headers['Content-Type'] = 'application/json'
-                    self.response.out.write(json.dumps(betslist))
+                    self.response.out.write(betslist)
                 else:
                     self.abort(404)                    
             else:
                 self.abort(404)
         else:
             self.abort(404)
+
                    
 class FormAllBets(webapp2.RequestHandler):
     def get(self):
@@ -74,7 +84,7 @@ class FormAllBets(webapp2.RequestHandler):
                 if bets:
                     betslist = json.dumps([b.to_dict_key() for b in bets])
                     self.response.headers['Content-Type'] = 'application/json'
-                    self.response.out.write(json.dumps(betslist))
+                    self.response.out.write(betslist)
             
                 else:
                     self.abort(404)

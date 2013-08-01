@@ -11,6 +11,7 @@ class Form(ndb.Model):
     Models a bet form
     '''
     creator = ndb.StringProperty(required=True)
+    description = ndb.StringProperty(required=True)
     time = ndb.DateTimeProperty(auto_now_add=True)
     until = ndb.DateTimeProperty(required=True)
     hashtag= ndb.StringProperty(required=True)
@@ -21,8 +22,9 @@ class Form(ndb.Model):
         d = {}
         d['key'] = self.key.urlsafe()
         d['creator'] = self.creator
+        d['description'] = self.description
         d['time'] = self.time.isoformat()
-        d['until'] = self.time.isoformat()
+        d['until'] = self.until.isoformat()
         d['hashtag'] = self.hashtag
         d['fields'] = self.fields
         d['authenticated'] = self.authenticated

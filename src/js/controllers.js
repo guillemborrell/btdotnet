@@ -14,13 +14,14 @@ function Process(s){
 
 function FieldListCtrl($scope,$http){
 	$scope.hashtag = "";
-	$scope.text = "";
+	$scope.description = "";
 	$scope.duration = "";
 	$scope.urlID = "";
 	$scope.username = username;
 	$scope.key = key;
+	
 	$scope.count = function(){
-		return $scope.text.length + $scope.hashtag.length +2;
+		return $scope.description.length + $scope.hashtag.length +2;
 	}
 	
 	$scope.fields = [
@@ -38,7 +39,6 @@ function FieldListCtrl($scope,$http){
 	    ];
 	
 	$scope.addField = function() {
-		console.log("Added field")
 		$scope.fields.push({Descr: $scope.formDescription,
 							Val: Process($scope.formValue),
 							Marked: false}
@@ -46,7 +46,6 @@ function FieldListCtrl($scope,$http){
 	}
 	
 	$scope.cleanFields = function() {
-		console.log("Clean fields")
 		var oldFields = $scope.fields;
 		$scope.fields = [];
 		angular.forEach(oldFields, function(field) {
@@ -60,20 +59,28 @@ function FieldListCtrl($scope,$http){
 	$scope.submitFields = function() {
 		var cleanFields = [];
 		angular.forEach($scope.fields, function(field){
-				cleanFields.push({Desc: field.Desc,
+				cleanFields.push({Descr: field.Descr,
 									Val: field.Val});
 			}
 		)
 		var data = {
 			creator: username,
+			description: $scope.description,
 			duration: $scope.duration,
 			hashtag: $scope.hashtag,
 			fields: cleanFields,
 			authenticated: 1
 		};
-		console.warn("Trying to send");
-		$http.post("http://betweetdotnet.appspot.com/field",data);
+		$http.post("http://betweetdotnet.appspot.com/restform",data);
 		window.location = "http://betweetdotnet.appspot.com";
 	}
 }
 
+function indexCtrl($scope, $http){
+	$scope.get_data = $http.get(
+		"http://betweetdotnet.appspot.com/restform/fromcreator?creator="+username
+		).success(function(data,status,headers,config) {
+				$scope.forms = data	;
+			}
+		)
+	}

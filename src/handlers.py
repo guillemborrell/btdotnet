@@ -38,7 +38,7 @@ class FormPage(BaseHandler):
                            'key': self.session.get('key')
                            }
  
-        template = JINJA_ENVIRONMENT.get_template('./templates/form.html')
+        template = JINJA_ENVIRONMENT.get_template('./templates/genform.html')
         self.response.write(template.render(template_values))
          
     def post(self):

@@ -15,10 +15,10 @@ application = webapp2.WSGIApplication(
     [
      ('/', EntryPage),
      ('/new', FormPage),
-     ('/form', FormView),
-     ('/form/fromcreator', FormFromCreator),
-     ('/form/lastbets', FormLastBets),
-     ('/form/allbets', FormAllBets),
+     ('/restform', FormView),
+     ('/restform/fromcreator', FormFromCreator),
+     ('/restform/lastbets', FormLastBets),
+     ('/restform/allbets', FormAllBets),
      ], debug=True, config = config)
 
 

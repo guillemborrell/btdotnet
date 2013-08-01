@@ -1,23 +1,42 @@
 <!doctype html>
 
 <html ng-app lang="es">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Betweet.net - La red de apuestas gratuitas!</title>
-	
-</head>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Betweet.net - La red de apuestas gratuitas!</title>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+		<script src="/js/controllers.js"></script>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>	
+	</head>
 <body>
 
 {% if auth == 'LOGGED_IN' %}
-<p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"</p>
+<p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"></p>
+		<script type="text/javascript">
+			var username="{{ var.get('screen_name')}}";
+			var key="{{ key }}";
+		</script>
 {% else %}
 <p><a href="{{ var }}">Login</a></p>
+		<script type="text/javascript">
+			var username="ANON";
+			var key="";
+		</script>
 {% endif %}
-
-<p>This is the entry page</p>
 
 {% if auth == 'LOGGED_IN' %}
 <p>You are logged in, you can create <a href="/new">forms</a></p>
+
+{% raw %}
+<div ng-controller="indexCtrl">
+	<ul ng-repeat="form in forms">
+		<li>{{ form.description }}</li>
+	</ul>
+</div>
+{% endraw %}
+
 {% else %}
 <p>Well, you can still vote</p>
 {% endif %}
