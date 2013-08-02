@@ -1,7 +1,7 @@
 import webapp2
 
 from google.appengine.ext.webapp.util import run_wsgi_app
-from handlers import EntryPage, FormPage, ViewFormPage
+from handlers import EntryPage, FormPage, ViewFormPage, LogoutPage
 from rest import FormView, FormFromCreator, FormLastBets, FormAllBets, BetView, BetFromUser
 
 config ={}
@@ -15,6 +15,7 @@ application = webapp2.WSGIApplication(
     [
      ('/', EntryPage),
      ('/new', FormPage),
+     ('/logout', LogoutPage),
      ('/viewform', ViewFormPage),
      ('/restform', FormView),
      ('/restform/fromcreator', FormFromCreator),

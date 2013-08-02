@@ -13,25 +13,16 @@
 <body>
 
 {% if auth == 'LOGGED_IN' %}
-<p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"></p>
-{% else %}
-<p><a href="{{ var }}">Login</a></p>
-
-{% endif %}
-
+<p>{{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"></p>
 <p>{{ thisform['description'] }}</p>
-<p>{{ thisform['until'] }}</p>
+<p>Valid until {{ thisform['until'] }}</p>
 
 <div ng-controller="fieldCtrl">
 <form name="bet" ng-submit="submitBet()">
 <input type="hidden" name="numfields" value="{{ thisform['fields'] | length }}">
 <input type="hidden" name="form_key" value="{{ thisform['key'] }}">
-
-{% if auth == 'LOGGED_IN' %}
 <input type="hidden" name="username" value="{{ var.get('screen_name') }}">
-{% else %}
-<input type="hidden" name="username" value="">
-{% endif %}
+<input type="hidden" name="auth" value="1">
 
 {% for field in thisform['fields'] %}
 {{ field['Descr'] }}
@@ -47,6 +38,45 @@
 </form>
 </div>
 <p>{{ thisform['info'] }}</p>
+
+
+{% else %}
+
+{% if thisform['authenticated'] %}
+
+<p>You must log in to bet on this<a href="{{ var }}">Login</a></p>
+{% else %}
+
+<p>{{ thisform['description'] }}</p>
+<p>Valid until {{ thisform['until'] }}</p>
+
+<div ng-controller="fieldCtrl">
+<form name="bet" ng-submit="submitBet()">
+<input type="hidden" name="numfields" value="{{ thisform['fields'] | length }}">
+<input type="hidden" name="form_key" value="{{ thisform['key'] }}">
+<input type="text" name="username" placeholder="name">
+<input type="hidden" name="auth" value="0">
+
+{% for field in thisform['fields'] %}
+{{ field['Descr'] }}
+<select name="{{ field['name'] }}">
+{% for v in field['Val'] %}
+<option>
+{{ v }}
+</option>
+{% endfor %}
+</select>
+{% endfor %}
+<input class="btn btn-success" type="submit" value="Bet">
+</form>
+</div>
+<p>{{ thisform['info'] }}</p>
+
+
+{% endif %}
+{% endif %}
+
+
 
 </body>
 </html>

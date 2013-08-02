@@ -13,21 +13,14 @@
 <body>
 
 {% if auth == 'LOGGED_IN' %}
-<p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"></p>
-		<script type="text/javascript">
-			var username="{{ var.get('screen_name')}}";
-			var key="{{ key }}";
-		</script>
-{% else %}
-<p><a href="{{ var }}">Login</a></p>
-		<script type="text/javascript">
-			var username="ANON";
-			var key="";
-		</script>
-{% endif %}
+<p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px">
+<a href="/logout">Logout</a>
+<form name="auth">
+<input type="hidden" name="username" value="{{ var.get('screen_name') }}">
+</form>
+</p>
 
-{% if auth == 'LOGGED_IN' %}
-<p>You are logged in, you can create <a href="/new">forms</a></p>
+<p>Create a new bet <a href="/new">form</a></p>
 
 {% raw %}
 <div ng-controller="indexCtrl">
@@ -44,7 +37,8 @@
 {% endraw %}
 
 {% else %}
-<p>Well, you can still vote</p>
+<p><a href="{{ var }}">Login</a></p>
+
 {% endif %}
 
 

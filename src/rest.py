@@ -120,21 +120,15 @@ class BetView(webapp2.RequestHandler):
         except UnicodeDecodeError:
             jsondata = json.loads(self.request.body,encoding='latin-1')
 
-        if jsondata['user']:
-            user = jsondata['user']
-            auth = True
-        else:
-            user = '';
-            auth = False
 
         formkey = ndb.Key(urlsafe=jsondata['form_key'])
         form = formkey.get()
 
         bet = Bet(parent = formkey,
                   description = form.description,
-                  user = user,
+                  user = jsondata['user'],
                   fields = jsondata['fields'],
-                  authenticated = auth)
+                  authenticated = bool(jsondata['auth']))
         
         bet.put()
         

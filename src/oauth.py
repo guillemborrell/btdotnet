@@ -37,6 +37,7 @@ def session_auth(session,request,this_url):
                 session_data.username = credentials['screen_name']
                 session_data.name = credentials['name']
                 session_data.avatar = credentials['profile_image_url']
+                session_data.lang = credentials['lang']
                 key = session_data.put()
                 session['key'] = key.urlsafe()
                 return 'LOGGED_IN', credentials
@@ -82,6 +83,7 @@ class Session(ndb.Model):
     username = ndb.StringProperty()
     name = ndb.StringProperty()
     avatar = ndb.StringProperty()
+    lang = ndb.StringProperty()
 
    
 def check_username(key,username):

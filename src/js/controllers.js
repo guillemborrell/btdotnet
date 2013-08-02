@@ -17,27 +17,14 @@ function FieldListCtrl($scope,$http){
 	$scope.description = "";
 	$scope.duration = "";
 	$scope.urlID = "";
-	$scope.username = username;
-	$scope.key = key;
+	$scope.authenticated = 0;
 	$scope.info = "";
 	
 	$scope.count = function(){
 		return $scope.description.length + $scope.hashtag.length +2;
 	}
 	
-	$scope.fields = [
-	    {Descr:'Number of goals',
-	     Val:[0,1,2,3,4,5],
-	     Marked:false
-	    },
-	    {Descr:'Máximo goleador',
-	     Val:['Arbeloa','Cristiano Ronaldo','Higuaín'],
-	     Marked:false
-	    },
-	    {Descr:'Resultado',
-	     Val:['Vencedor','Perdedor'],
-	     Marked:false}
-	    ];
+	$scope.fields = [];
 	
 	$scope.addField = function() {
 		$scope.fields.push({Descr: $scope.formDescription,
@@ -65,13 +52,14 @@ function FieldListCtrl($scope,$http){
 			}
 		)
 		var data = {
-			creator: username,
+			creator: document.forms['data'].username.value,
+			key: document.forms['data'].key.value,
 			description: $scope.description,
 			duration: $scope.duration,
 			hashtag: $scope.hashtag,
 			fields: cleanFields,
 			info: $scope.info,
-			authenticated: 1
+			authenticated: $scope.authenticated
 		};
 
 		$http.post(
@@ -85,6 +73,7 @@ function FieldListCtrl($scope,$http){
 }
 
 function indexCtrl($scope, $http){
+	username = document.forms['auth'].username.value;
 	$scope.get_data = $http.get(
 		"http://betweetdotnet.appspot.com/restform/fromcreator?creator="+username
 		).success(function(data,status,headers,config) {
@@ -104,13 +93,15 @@ function fieldCtrl($scope, $http){
 		numforms = parseInt(document.forms['bet'].numfields.value);
 		form_key = document.forms['bet'].form_key.value;
 		username = document.forms['bet'].username.value;
+		auth = parseInt(document.forms['bet'].auth.value);
 		
-		for (i=3; i< 3+numforms; i++){
+		for (i=4; i< 4+numforms; i++){
 			fields.push([document.forms['bet'][i].name, document.forms['bet'][i].value]);
 		}
 		data = {form_key: form_key,
 				user: username,
-				fields: fields};
+				fields: fields,
+				auth: auth};
 		
 		console.log(data);
 		

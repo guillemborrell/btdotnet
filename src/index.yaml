@@ -22,6 +22,13 @@ indexes:
   - name: time
     direction: desc
 
+- kind: Bet
+  properties:
+  - name: authenticated
+  - name: user
+  - name: time
+    direction: desc
+
 - kind: Form
   properties:
   - name: creator

@@ -12,24 +12,21 @@
 	</head>
 	
 	<body>
-<!-- 		Passing authentication variables as global variables to javascript -->
 		{% if auth == 'LOGGED_IN' %}		
-		<script type="text/javascript">
-			var username="{{ var.get('screen_name')}}";
-			var key="{{ key }}";
-		</script>
-		<p>You are {{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"></p>
-		{% else %}
-		<script type="text/javascript">
-			var username="ANON";
-			var key="";
-		</script>
-		<p><a href="{{ var }}">Login</a></p>
-		{% endif %}
+		<p>You are {{ var.get('name') }} 
+		<img src="{{ var.get('profile_image_url') }}" width="33px">
+		<a href="/logout">Logout</a>
+		</p>
 		
-<!-- 		Start raw section of Angularjs directives. Those are incompatible with Jinja2. -->
-		{% raw %}	
 		<div ng-controller="FieldListCtrl">
+			<form name="data">
+				<input type="hidden"
+					name="username"
+					value="{{ var.get('screen_name') }}">
+				<input type="hidden"	
+					name="key"
+					value="{{ key }}">
+			</form>
 			<input type="text"
 					ng-model="description"
 					placeholder="Description"
@@ -38,8 +35,11 @@
 					ng-model="hashtag"
 					placeholder="hashtag"
 					accept-charset="UTF-8"><br/>
-			<input type="number" ng-model="duration" placeholder="hours active"><br/>
-			
+			<input type="number"
+					ng-model="duration"
+					placeholder="hours active"><br/>
+			<input type="checkbox"
+					ng-model="authenticated">Only for authenticated users.<br/>
 			
 			<form ng-submit="addField()">
 				<input type="text"
@@ -50,7 +50,7 @@
 				<input type="text"
 					ng-model="formValue"
 					size="30"
-					placeholder="Value of the field"
+					placeholder="0:3 or zero,one,two,three"
 					accept-charset="UTF-8">
 				<input class="" type="submit" value="add">
 			</form>
@@ -58,7 +58,8 @@
 			<input type="text" cols="60" rows="5" ng-model="info"
 				placeholder="Info" accept-charset="UTF-8">
 
-
+<!-- 		Start raw section of Angularjs directives. Those are incompatible with Jinja2. -->
+			{% raw %}	
 			<p>Y eso se ve tal que así:</p>
 			<p>{{ description }}  #{{ hashtag }}. {{ 140-count() }}/140</p>
 			<p ng-repeat="field in fields">
@@ -70,7 +71,8 @@
 					</option>
 				</select>
 			</p>
-			
+			{% endraw %}
+						
 			<form ng-submit="cleanFields()">
 			<input class="btn btn-danger" type="submit" value="Delete Selected">
 			</form>
@@ -78,7 +80,9 @@
 			<input class="btn btn-success" type="submit" value="Create Bet">
 			</form>
 		</div>
-		{% endraw %}
+		{% else %}
+		<p>You must login to create bet forms. <a href="{{ var }}">Login</a></p>
+		{% endif %}
 
 	</body>
 </html>

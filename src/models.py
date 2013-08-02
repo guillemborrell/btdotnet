@@ -72,7 +72,7 @@ class Bet(ndb.Model):
     def from_user(cls,name):
         return cls.query(
             cls.user == name
-            ).order(-cls.time).fetch(5)
+            ).filter(cls.authenticated==True).order(-cls.time).fetch(5)
     
     def to_dict_key(self):
         d = {}
