@@ -76,6 +76,7 @@ class Bet(ndb.Model):
     
     def to_dict_key(self):
         d = {}
+        d['key'] = self.key.urlsafe()
         d['user'] = self.user
         d['authenticated'] = self.authenticated
         d['time'] = self.time.isoformat()
@@ -117,3 +118,47 @@ class Bet(ndb.Model):
                 ).order(cls.date).fetch(
                     cls.count_form(ancestor_key)
                     )
+
+
+class Session(ndb.Model):
+    oauth_token = ndb.StringProperty()
+    oauth_token_secret = ndb.StringProperty()
+    oauth_verifier = ndb.StringProperty()
+    timestamp = ndb.DateTimeProperty(auto_now_add=True)
+    username = ndb.StringProperty()
+    name = ndb.StringProperty()
+    avatar = ndb.StringProperty()
+    lang = ndb.StringProperty()
+    
+    @classmethod
+    def last_from_username(cls, username):
+        return cls.query(
+            cls.username == username
+                ).order(-cls.time).fetch(1)
+
+
+class Profile(ndb.Model):
+    time=ndb.DateTimeProperty(auto_now_add=True)
+    name=ndb.StringProperty(required=True)
+    reputation=ndb.IntegerProperty(required=True)
+
+    def to_dict_key(self):
+        d={}
+        d['key'] = self.key.urlsafe()
+        d['time'] = self.time
+        d['name'] = self.name
+        d['reputation'] = self.reputation
+
+    def last_session(self):
+        return Session.last_from_username(self.name)
+    
+    @classmethod
+    def from_name(cls, name):
+        return cls.query(cls.name == name).fetch(1)  
+        
+
+class Comment(ndb.Model):
+    """Parent has to be Profile"""
+    author=ndb.StringProperty(required=True)
+    vote=ndb.IntegerProperty(required=True)
+    text=ndb.StringProperty()

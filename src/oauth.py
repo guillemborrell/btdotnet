@@ -5,6 +5,7 @@ Created on Jul 20, 2013
 '''
 from twython import Twython
 from google.appengine.ext import ndb
+from models import Profile, Session
 
 APP_KEY = 'dmyD2CHHePKQ6M7bQJg3wQ'
 APP_SECRET = 'tAsyLFGu9GIuYluUbNjqmv29Cg0VifK5w8yIKFrmo'
@@ -38,6 +39,16 @@ def session_auth(session,request,this_url):
                 session_data.name = credentials['name']
                 session_data.avatar = credentials['profile_image_url']
                 session_data.lang = credentials['lang']
+                
+                #Check if profile exists
+                profile = Profile.from_name(credentials['screen_name'])
+                
+                if not profile:
+                    Profile(
+                        name = credentials['screen_name'],
+                        reputation = 0
+                            ).put()
+                
                 key = session_data.put()
                 session['key'] = key.urlsafe()
                 return 'LOGGED_IN', credentials
@@ -74,17 +85,6 @@ def session_auth(session,request,this_url):
         session['key'] = key.urlsafe()
         return 'ANONYMOUS', auth['auth_url']
     
-
-class Session(ndb.Model):
-    oauth_token = ndb.StringProperty()
-    oauth_token_secret = ndb.StringProperty()
-    oauth_verifier = ndb.StringProperty()
-    timestamp = ndb.DateTimeProperty(auto_now_add=True)
-    username = ndb.StringProperty()
-    name = ndb.StringProperty()
-    avatar = ndb.StringProperty()
-    lang = ndb.StringProperty()
-
    
 def check_username(key,username):
     session = ndb.Key(url_safe=key).get()
