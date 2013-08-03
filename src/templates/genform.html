@@ -91,10 +91,11 @@
 				<textarea class="form-control" rows="3" ng-model="info"></textarea>
 			</li>
 <!-- 		Start raw section of Angularjs directives. Those are incompatible with Jinja2. -->
+		</ul>
 	{% raw %}		
 		<div class="panel-info">
-			<div class="panel-info-heading">
-				<h5 class="panel-title">Preview</h5>		
+			<div class="panel-heading">
+				<h5>Preview</h5>		
 			</div>
 			<ul class="list-group">
 				<li class="list-group-item">
@@ -115,7 +116,6 @@
 					<input class="btn btn-danger" type="submit" value="Delete Selected">
 				</form>	
 			</li>
-		</ul>
 		</div>
 		{% endraw %}
 		<li class="list-group-item text-right">		
@@ -127,7 +127,16 @@
 	</div>
 </div>
 {% else %}
-<p>You must login to create bet forms. <a href="{{ var }}">Login</a></p>
+
+<div class="col-6 col-lg-4">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3><a href="/">Betweet.net</a></h3>
+		</div>
+		<p>You must login to create bet forms. <a href="{{ var }}">Login</a></p>
+	</div>
+</div>
+
 {% endif %}
 
 </div>

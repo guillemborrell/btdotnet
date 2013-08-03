@@ -62,33 +62,59 @@
 
 {% if thisform['authenticated'] %}
 
-<p>You must log in to bet on this<a href="{{ var }}">Login</a></p>
+<div class="col-6 col-lg-4">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3><a href="/">Betweet.net</a></h3>
+		</div>
+		<p>You must log in to bet on this<a href="{{ var }}">Login</a></p>
+	</div>
+</div>
+
+
 {% else %}
 
-<p>{{ thisform['description'] }}</p>
-<p>Valid until {{ thisform['until'] }}</p>
 
-<div ng-controller="fieldCtrl">
-<form name="bet" ng-submit="submitBet()">
-<input type="hidden" name="numfields" value="{{ thisform['fields'] | length }}">
-<input type="hidden" name="form_key" value="{{ thisform['key'] }}">
-<input type="text" name="username" placeholder="name">
-<input type="hidden" name="auth" value="0">
-
-{% for field in thisform['fields'] %}
-{{ field['Descr'] }}
-<select name="{{ field['name'] }}">
-{% for v in field['Val'] %}
-<option>
-{{ v }}
-</option>
-{% endfor %}
-</select>
-{% endfor %}
-<input class="btn btn-success" type="submit" value="Bet">
-</form>
+<div class="col-6 col-lg-4" ng-controller="fieldCtrl">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3>Bet</h3>
+		</div>
+		<p>{{ thisform['description'] }} </p>
+		<form name="bet" ng-submit="submitBet()">
+			<ul class="list-group">
+				<input type="hidden" name="numfields" value="{{ thisform['fields'] | length }}">
+				<input type="hidden" name="form_key" value="{{ thisform['key'] }}">
+				<li class="list-group-item">
+					<input type="text" name="username" placeholder="name">
+				</li>
+				<input type="hidden" name="auth" value="0">
+				{% for field in thisform['fields'] %}
+					<li class="list-group-item">
+						<h5 class="list-group-item-heading">{{ field['Descr'] }}</h5>
+						<select name="{{ field['name'] }}">
+						{% for v in field['Val'] %}
+							<option>
+								{{ v }}
+							</option>
+						{% endfor %}
+						</select>
+					</li>
+				{% endfor %}
+				<li class="list-group-item text-right">
+					<input class="btn btn-success" type="submit" value="Bet">
+				</li>
+			</ul>
+			
+		</form>
+		<div class="panel-info">
+			<div class="panel-heading">
+				<h5>Additional information</h5>
+			</div>
+			{{ thisform['info'] }}
+		</div>
+	</div>
 </div>
-<p>{{ thisform['info'] }}</p>
 
 
 {% endif %}

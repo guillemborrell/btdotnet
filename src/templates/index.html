@@ -21,6 +21,21 @@
 		</p>
 		<p>Create a new bet <a href="/new">form</a></p>
 	</div>
+	<div class="panel" ng-controller="indexCtrl">
+		<div class="panel-heading">
+			<h3 class="panel-title">Last bet forms.</h3>
+		</div>
+		<ul class="list-group" ng-repeat="form in last">
+			<li class="list-group-item">
+			{% raw %}
+			<span class="badge">{{ form.bets }}</span> 
+			<a href="http://betweetdotnet.appspot.com/viewform?key={{ form.key  }}">
+				{{ form.description }} | Valid until {{ form.until | date:'MM/dd/yyyy @ h:mma' }}
+			</a>
+			{% endraw %}				
+			</li>
+		</ul>
+	</div>
 </div>
 
 <div class="col-6 col-lg-4">
@@ -64,6 +79,23 @@
 	</div>
 </div>
 
+<div class="col-6 col-lg-4">
+	<div class="panel" ng-controller="anonIndexCtrl">
+		<div class="panel-heading">
+			<h3 class="panel-title">Last bet forms.</h3>
+		</div>
+		<ul class="list-group" ng-repeat="form in last">
+			<li class="list-group-item">
+			{% raw %}
+			<span class="badge">{{ form.bets }}</span> 
+			<a href="http://betweetdotnet.appspot.com/viewform?key={{ form.key  }}">
+				{{ form.description }} | Valid until {{ form.until | date:'MM/dd/yyyy @ h:mma' }}
+			</a>
+			{% endraw %}				
+			</li>
+		</ul>
+	</div>
+</div>
 {% endif %}
 </div>
 

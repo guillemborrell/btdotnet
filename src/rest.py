@@ -47,6 +47,22 @@ class FormView(webapp2.RequestHandler):
 
         form.put()
         
+
+class FormLast(webapp2.RequestHandler):
+    def get(self):
+        formlist = []
+        forms = Form.last()
+        
+        if forms:
+            for form in forms:
+                formlist.append(form.to_dict_key())
+                
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(formlist))
+            
+        else:
+            self.abort(404)
+        
         
 class FormFromCreator(webapp2.RequestHandler):
     def get(self):

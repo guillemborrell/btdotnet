@@ -85,7 +85,20 @@ function indexCtrl($scope, $http){
 		).success(function(data,status,headers,config) {
 			$scope.bets = data;
 		})
+	$scope.get_data2 = $http.get(
+		"http://betweetdotnet.appspot.com/restform/last"
+		).success(function(data,status,headers,config) {
+			$scope.last = data;
+		})
 	}
+
+function anonIndexCtrl($scope, $http){
+	$scope.get_data2 = $http.get(
+			"http://betweetdotnet.appspot.com/restform/last"
+			).success(function(data,status,headers,config) {
+				$scope.last = data;
+			})	
+}
 
 function fieldCtrl($scope, $http){
 	$scope.submitBet = function() {

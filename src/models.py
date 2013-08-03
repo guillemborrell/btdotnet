@@ -36,10 +36,14 @@ class Form(ndb.Model):
         return d
         
     @classmethod
-    def from_creator(cls,name):
+    def from_creator(cls,name,num=5):
         return cls.query(
             cls.creator == name
-            ).order(-cls.time).fetch(5)
+            ).order(-cls.time).fetch(num)
+    
+    @classmethod
+    def last(cls,num=5):
+        return cls.query().order(-cls.time).fetch(num)
     
     def number_of_bets(self):
         return Bet.count_form(self.key)
