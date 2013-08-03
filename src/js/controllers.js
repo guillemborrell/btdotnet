@@ -30,7 +30,9 @@ function FieldListCtrl($scope,$http){
 		$scope.fields.push({Descr: $scope.formDescription,
 							Val: Process($scope.formValue),
 							Marked: false}
-		);
+							);
+		document.forms['fieldform'].description.value="";
+		document.forms['fieldform'].value.value="";
 	}
 	
 	$scope.cleanFields = function() {

@@ -66,18 +66,20 @@
 			</li>	
 	
 			<li class="list-group-item">
-				<form ng-submit="addField()">
+				<form name="fieldform" ng-submit="addField()">
 					<div class="input-group">
 					<input type="text"
 						class="form-control"
 						ng-model="formDescription"
 						size="30"
+						name="description"
 						placeholder="Description for the field"
 						accept-charset="UTF-8">
 					<input type="text"
 						class="form-control"
 						ng-model="formValue"
 						size="30"
+						name="value"
 						placeholder="0:3 or zero,one,two,three"
 						accept-charset="UTF-8">	
 					<span class="input-group-btn"></span>
