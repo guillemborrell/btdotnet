@@ -42,7 +42,7 @@ class FormView(webapp2.RequestHandler):
         form.hashtag = jsondata['hashtag']
         form.fields = procfields
         form.description = jsondata['description']
-        form.authenticated = bool(jsondata['authenticated']) 
+        form.authenticated = not bool(jsondata['authenticated']) 
         form.info = jsondata['info']
 
         form.put()

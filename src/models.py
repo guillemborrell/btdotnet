@@ -125,10 +125,27 @@ class Session(ndb.Model):
     oauth_token_secret = ndb.StringProperty()
     oauth_verifier = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(auto_now_add=True)
-    username = ndb.StringProperty()
-    name = ndb.StringProperty()
-    avatar = ndb.StringProperty()
-    lang = ndb.StringProperty()
+    credentials = ndb.JsonProperty()
+
+    @property
+    def username(self):
+        return self.credentials['screen_name']
+    
+    @property
+    def name(self):
+        return self.credentials['name']
+    
+    @property
+    def avatar(self):
+        return self.credentials['profile_image_url']
+    
+    @property
+    def lang(self):
+        return self.credentials['lang']
+    
+    @property
+    def verified(self):
+        return self.credentials['verified']
     
     @classmethod
     def last_from_username(cls, username):
@@ -162,3 +179,9 @@ class Comment(ndb.Model):
     author=ndb.StringProperty(required=True)
     vote=ndb.IntegerProperty(required=True)
     text=ndb.StringProperty()
+
+    
+class Template(ndb.Model):
+    """Templates for bets"""
+    description=ndb.StringProperty(required=True)
+    value=ndb.StringProperty(required=True)

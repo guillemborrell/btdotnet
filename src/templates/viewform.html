@@ -1,43 +1,61 @@
-<!doctype html>
+{% extends "templates/base.html" %}
 
-<html ng-app lang="es">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Betweet.net - La red de apuestas gratuitas!</title>
-		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" type="text/css" />
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-		<script src="/js/controllers.js"></script>
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>	
-	</head>
-<body>
+{% block body %}
+
+<div class="row">
 
 {% if auth == 'LOGGED_IN' %}
-<p>{{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px"></p>
-<p>{{ thisform['description'] }}</p>
-<p>Valid until {{ thisform['until'] }}</p>
 
-<div ng-controller="fieldCtrl">
-<form name="bet" ng-submit="submitBet()">
-<input type="hidden" name="numfields" value="{{ thisform['fields'] | length }}">
-<input type="hidden" name="form_key" value="{{ thisform['key'] }}">
-<input type="hidden" name="username" value="{{ var.get('screen_name') }}">
-<input type="hidden" name="auth" value="1">
-
-{% for field in thisform['fields'] %}
-{{ field['Descr'] }}
-<select name="{{ field['name'] }}">
-{% for v in field['Val'] %}
-<option>
-{{ v }}
-</option>
-{% endfor %}
-</select>
-{% endfor %}
-<input class="btn btn-success" type="submit" value="Bet">
-</form>
+<div class="col-6 col-lg-4">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3><a href="/">Betweet.net</a></h3>
+		</div>
+	<p>{{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px">
+		<a href="/logout">Logout</a>
+	</p>
+	<p>Create a new bet <a href="/new">form</a></p>
+	</div>
 </div>
-<p>{{ thisform['info'] }}</p>
+
+<div class="col-6 col-lg-4" ng-controller="fieldCtrl">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3>Bet</h3>
+		</div>
+		<p>{{ thisform['description'] }} </p>
+		<form name="bet" ng-submit="submitBet()">
+			<input type="hidden" name="numfields" value="{{ thisform['fields'] | length }}">
+			<input type="hidden" name="form_key" value="{{ thisform['key'] }}">
+			<input type="hidden" name="username" value="{{ var.get('screen_name') }}">
+			<input type="hidden" name="auth" value="1">
+			<ul class="list-group">
+				{% for field in thisform['fields'] %}
+					<li class="list-group-item">
+						<h5 class="list-group-item-heading">{{ field['Descr'] }}</h5>
+						<select name="{{ field['name'] }}">
+						{% for v in field['Val'] %}
+							<option>
+								{{ v }}
+							</option>
+						{% endfor %}
+						</select>
+					</li>
+				{% endfor %}
+				<li class="list-group-item text-right">
+					<input class="btn btn-success" type="submit" value="Bet">
+				</li>
+			</ul>
+			
+		</form>
+		<div class="panel-info">
+			<div class="panel-heading">
+				<h5>Additional information</h5>
+			</div>
+			{{ thisform['info'] }}
+		</div>
+	</div>
+</div>
 
 
 {% else %}
@@ -76,7 +94,6 @@
 {% endif %}
 {% endif %}
 
+</div>
 
-
-</body>
-</html>
+{% endblock %}

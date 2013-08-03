@@ -35,10 +35,7 @@ def session_auth(session,request,this_url):
                                session_data.oauth_token,
                                session_data.oauth_token_secret)
                 credentials = auth.verify_credentials()
-                session_data.username = credentials['screen_name']
-                session_data.name = credentials['name']
-                session_data.avatar = credentials['profile_image_url']
-                session_data.lang = credentials['lang']
+                session_data.credentials = credentials
                 
                 #Check if profile exists
                 profile = Profile.from_name(credentials['screen_name'])
@@ -62,9 +59,7 @@ def session_auth(session,request,this_url):
             # session_data.oauth_token,
             # session_data.oauth_token_secret)
             # credentials = auth.verify_credentials()
-            credentials = {'screen_name': session_data.username,
-                           'name': session_data.name,
-                           'profile_image_url': session_data.avatar}
+            credentials = session_data.credentials
             return 'LOGGED_IN', credentials
         
         else:

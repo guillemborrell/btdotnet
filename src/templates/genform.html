@@ -1,88 +1,135 @@
-<!doctype html>
-<html lang="es" data-ng-app="">
-	<head>
-		<meta content="text/html; charset=UTF-8">
-		<title>Betweet.net - La red de apuestas gratuita.</title>
-		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" type="text/css" />
-		
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-		<script src="/js/controllers.js"></script>
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
-	</head>
-	
-	<body>
-		{% if auth == 'LOGGED_IN' %}		
-		<p>You are {{ var.get('name') }} 
-		<img src="{{ var.get('profile_image_url') }}" width="33px">
+{% extends "templates/base.html" %}
+
+{% block body %}
+
+<div class="row">
+
+{% if auth == 'LOGGED_IN' %}		
+
+<div class="col-6 col-lg-4">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3><a href="/">Betweet.net</a></h3>
+		</div>
+	<p>{{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px">
 		<a href="/logout">Logout</a>
-		</p>
-		
-		<div ng-controller="FieldListCtrl">
-			<form name="data">
-				<input type="hidden"
-					name="username"
-					value="{{ var.get('screen_name') }}">
-				<input type="hidden"	
-					name="key"
-					value="{{ key }}">
-			</form>
-			<input type="text"
+	</p>
+	<p>Create a new bet <a href="/new">form</a></p>
+	</div>
+</div>
+
+<div class="col-6 col-lg-4" ng-controller="FieldListCtrl">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3>New bet</h3>
+		</div>
+		<form name="data">
+			<input type="hidden"
+				name="username"
+				value="{{ var.get('screen_name') }}">
+			<input type="hidden"	
+				name="key"
+				value="{{ key }}">
+		</form>
+		<ul class="list-group">
+			<li class="list-group-item">
+				<input type="text"
+					class="form-control"
 					ng-model="description"
 					placeholder="Description"
-					accept-charset="UTF-8"><br/>
-			<input type="text"
+					accept-charset="UTF-8">
+			</li>
+			<li class="list-group-item">
+				<div class="input-group">
+				<span class="input-group-addon">#</span>
+				<input type="text"
+					class="form-control"
 					ng-model="hashtag"
 					placeholder="hashtag"
-					accept-charset="UTF-8"><br/>
-			<input type="number"
+					accept-charset="UTF-8">
+				</div>
+			</li>
+			<li class="list-group-item">
+				<input type="number"
+					class="form-control"
 					ng-model="duration"
-					placeholder="hours active"><br/>
-			<input type="checkbox"
-					ng-model="authenticated">Only for authenticated users.<br/>
-			
-			<form ng-submit="addField()">
-				<input type="text"
-					ng-model="formDescription"
-					size="30"
-					placeholder="Description for the field"
-					accept-charset="UTF-8">
-				<input type="text"
-					ng-model="formValue"
-					size="30"
-					placeholder="0:3 or zero,one,two,three"
-					accept-charset="UTF-8">
-				<input class="" type="submit" value="add">
-			</form>
-			
-			<input type="text" cols="60" rows="5" ng-model="info"
-				placeholder="Info" accept-charset="UTF-8">
-
+					placeholder="hours active">
+			</li>
+			<li class="list-group-item">
+				<div class="input-group">
+				<span>
+				<input type="checkbox"
+					ng-model="authenticated">
+				</span>
+					Open to anonymous users.
+				</div>
+			</li>	
+	
+			<li class="list-group-item">
+				<form ng-submit="addField()">
+					<div class="input-group">
+					<input type="text"
+						class="form-control"
+						ng-model="formDescription"
+						size="30"
+						placeholder="Description for the field"
+						accept-charset="UTF-8">
+					<input type="text"
+						class="form-control"
+						ng-model="formValue"
+						size="30"
+						placeholder="0:3 or zero,one,two,three"
+						accept-charset="UTF-8">	
+					<span class="input-group-btn"></span>
+					<input class="btn btn-default" type="submit" value="add">
+					</div>
+				</form>
+			</li>
+			<li class="list-group-item">
+				Additional information<br/>
+				
+				<textarea class="form-control" rows="3" ng-model="info"></textarea>
+			</li>
 <!-- 		Start raw section of Angularjs directives. Those are incompatible with Jinja2. -->
-			{% raw %}	
-			<p>Y eso se ve tal que así:</p>
-			<p>{{ description }}  #{{ hashtag }}. {{ 140-count() }}/140</p>
-			<p ng-repeat="field in fields">
-				<input type="checkbox" ng-model="field.Marked">				
+	{% raw %}		
+		<div class="panel-info">
+			<div class="panel-info-heading">
+				<h5 class="panel-title">Preview</h5>		
+			</div>
+			<ul class="list-group">
+				<li class="list-group-item">
+				<span class="badge">{{ 140-count() }}/140</span>
+				{{ description }}  #{{ hashtag }}
+				</li>
+				<li class="list-group-item" ng-repeat="field in fields">
+			<input type="checkbox" ng-model="field.Marked">				
 				{{ field.Descr }}
-				<select>
-					<option ng-repeat="choice in field.Val" value="choice">
-						{{ choice }}
-					</option>
-				</select>
-			</p>
-			{% endraw %}
-						
-			<form ng-submit="cleanFields()">
-			<input class="btn btn-danger" type="submit" value="Delete Selected">
-			</form>
-			<form ng-submit="submitFields()">
-			<input class="btn btn-success" type="submit" value="Create Bet">
-			</form>
+			<select>
+				<option ng-repeat="choice in field.Val" value="choice">
+					{{ choice }}
+				</option>
+			</select>
+			</li>
+			<li class="list-group-item text-right">
+				<form ng-submit="cleanFields()">
+					<input class="btn btn-danger" type="submit" value="Delete Selected">
+				</form>	
+			</li>
+		</ul>
 		</div>
-		{% else %}
-		<p>You must login to create bet forms. <a href="{{ var }}">Login</a></p>
-		{% endif %}
+		{% endraw %}
+		<li class="list-group-item text-right">		
+			<form ng-submit="submitFields()">
+				<input class="btn btn-success" type="submit" value="Create Bet">
+			</form>
+		</li>
+	</ul>
+	</div>
+</div>
+{% else %}
+<p>You must login to create bet forms. <a href="{{ var }}">Login</a></p>
+{% endif %}
 
-	</body>
-</html>
+</div>
+
+{% endblock %}
