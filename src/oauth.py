@@ -35,6 +35,7 @@ def session_auth(session,request,this_url):
                                session_data.oauth_token,
                                session_data.oauth_token_secret)
                 credentials = auth.verify_credentials()
+                session_data.username = credentials['screen_name']
                 session_data.credentials = credentials
                 
                 #Check if profile exists

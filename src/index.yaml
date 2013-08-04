@@ -39,3 +39,9 @@ indexes:
   - name: creator
   - name: time
     direction: desc
+
+- kind: Session
+  properties:
+  - name: username
+  - name: timestamp
+    direction: desc

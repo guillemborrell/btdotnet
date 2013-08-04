@@ -59,11 +59,12 @@
 		<div class="panel-heading">
 			<h5>Bets</h5>
 		</div>
-		{% raw %}
+		
 		<div ng-repeat="bet in bets">
-			<button type="button" class="btn btn-info">(ᵔᴥᵔ)</button>
+			{% raw %}
+			<img src="{{ bet.avatar }}" width="33px" class="img-circle">
+			{% endraw %}
 		</div>
-		{% endraw %}
 	</div>
 </div>
 

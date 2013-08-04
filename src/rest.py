@@ -3,7 +3,7 @@
 import webapp2
 import datetime
 import json
-from models import Form, Bet
+from models import Form, Bet, Session
 from google.appengine.ext import ndb
 import logging
 
@@ -106,9 +106,15 @@ class FormAllBets(webapp2.RequestHandler):
                 bets = form.all_bets()
 
                 if bets:
-                    betslist = json.dumps([b.to_dict_key() for b in bets])
+                    betslist = []
+                    for bet in bets:
+                        betslist.append({'key': bet.key.urlsafe(),
+                            'avatar': bet.avatar,
+                            'user': bet.user}
+                            )
+
                     self.response.headers['Content-Type'] = 'application/json'
-                    self.response.out.write(betslist)
+                    self.response.out.write(json.dumps(betslist))
             
                 else:
                     self.abort(404)
@@ -123,7 +129,7 @@ class BetView(webapp2.RequestHandler):
             bet = ndb.Key(urlsafe = self.request.get('key')).get()
             if bet:
                 self.response.headers['Content-Type'] = 'application/json'
-                self.response.out.write(bet.to_dict_key())
+                self.response.out.write(json.dumps(bet.to_dict_key()))
                 
             else:
                 self.abort(404)
@@ -139,15 +145,24 @@ class BetView(webapp2.RequestHandler):
 
         formkey = ndb.Key(urlsafe=jsondata['form_key'])
         form = formkey.get()
+        
+        #if authenticated
+        if bool(jsondata['auth']):
+            session = Session.last_from_username(jsondata['user'])
+            avatar = session[0].avatar
+            
+        else:
+            avatar = 'http://betweetdotnet.appspot.com/img/default.jpg'
 
         bet = Bet(parent = formkey,
                   description = form.description,
                   user = jsondata['user'],
                   fields = jsondata['fields'],
-                  authenticated = bool(jsondata['auth']))
+                  authenticated = bool(jsondata['auth']),
+                  avatar = avatar)
         
         bet.put()
-        
+               
 
 class BetFromUser(webapp2.RequestHandler):
     def get(self):

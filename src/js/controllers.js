@@ -106,7 +106,9 @@ function fieldCtrl($scope, $http){
 	$scope.get_data = $http.get(
 			"http://betweetdotnet.appspot.com/restform/allbets?key="+document.forms['bet'].form_key.value
 		).success(function(data,status,headers,config) {
-			$scope.bets = data	;
+			$scope.bets = data;
+		}).error(function(data,status,headers,config) {
+			$scope.bets = [];
 		})
 	
 	$scope.submitBet = function() {
@@ -123,8 +125,6 @@ function fieldCtrl($scope, $http){
 				user: username,
 				fields: fields,
 				auth: auth};
-		
-		console.log(data);
 		
 		$http.post(
 			"http://betweetdotnet.appspot.com/restbet",data

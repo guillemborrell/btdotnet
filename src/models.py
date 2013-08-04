@@ -71,6 +71,7 @@ class Bet(ndb.Model):
     authenticated = ndb.BooleanProperty(required=True)
     time = ndb.DateTimeProperty(auto_now_add=True)
     fields = ndb.JsonProperty(required=True)
+    avatar = ndb.TextProperty(required=True)
 
     @classmethod
     def from_user(cls,name):
@@ -86,6 +87,7 @@ class Bet(ndb.Model):
         d['time'] = self.time.isoformat()
         d['fields'] = self.fields
         d['description'] = self.description
+        d['avatar'] = self.avatar
         
         return d
     
@@ -106,22 +108,32 @@ class Bet(ndb.Model):
     @classmethod
     def query_form_any(cls, ancestor_key):
         "Returns all bets. First is first"
-        return cls.query(
-            ancestor=ancestor_key             
-            ).order(cls.time).fetch(
-                cls.count_form(ancestor_key)
+        try:
+            bets = cls.query(
+                    ancestor=ancestor_key             
+                ).order(cls.time).fetch(
+                    cls.count_form(ancestor_key)
                 )
+        except:
+            bets = []
+
+        return bets 
     
     @classmethod
     def query_form_auth(cls, ancestor_key):
         "Returns authenticaded bets. First is first"
-        return cls.query(
+        try:
+            bets =  cls.query(
             ancestor=ancestor_key
             ).filter(
                 cls.authenticated==True
                 ).order(cls.time).fetch(
                     cls.count_form(ancestor_key)
                     )
+        except:
+            bets = []
+                
+        return bets
 
 
 class Session(ndb.Model):
@@ -129,11 +141,8 @@ class Session(ndb.Model):
     oauth_token_secret = ndb.StringProperty()
     oauth_verifier = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(auto_now_add=True)
+    username = ndb.StringProperty()
     credentials = ndb.JsonProperty()
-
-    @property
-    def username(self):
-        return self.credentials['screen_name']
     
     @property
     def name(self):
@@ -155,7 +164,7 @@ class Session(ndb.Model):
     def last_from_username(cls, username):
         return cls.query(
             cls.username == username
-                ).order(-cls.time).fetch(1)
+                ).order(-cls.timestamp).fetch(1)
 
 
 class Profile(ndb.Model):
@@ -169,6 +178,7 @@ class Profile(ndb.Model):
         d['time'] = self.time
         d['name'] = self.name
         d['reputation'] = self.reputation
+        d['avatar'] = self.avatar
 
     def last_session(self):
         return Session.last_from_username(self.name)
