@@ -29,6 +29,11 @@ indexes:
   - name: time
     direction: desc
 
+- kind: Bet
+  ancestor: yes
+  properties:
+  - name: time
+
 - kind: Form
   properties:
   - name: creator

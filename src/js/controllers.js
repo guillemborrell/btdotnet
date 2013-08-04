@@ -103,6 +103,12 @@ function anonIndexCtrl($scope, $http){
 }
 
 function fieldCtrl($scope, $http){
+	$scope.get_data = $http.get(
+			"http://betweetdotnet.appspot.com/restform/allbets?key="+document.forms['bet'].form_key.value
+		).success(function(data,status,headers,config) {
+			$scope.bets = data	;
+		})
+	
 	$scope.submitBet = function() {
 		fields = [];
 		numforms = parseInt(document.forms['bet'].numfields.value);

@@ -108,7 +108,7 @@ class Bet(ndb.Model):
         "Returns all bets. First is first"
         return cls.query(
             ancestor=ancestor_key             
-            ).order(cls.date).fetch(
+            ).order(cls.time).fetch(
                 cls.count_form(ancestor_key)
                 )
     
@@ -119,7 +119,7 @@ class Bet(ndb.Model):
             ancestor=ancestor_key
             ).filter(
                 cls.authenticated==True
-                ).order(cls.date).fetch(
+                ).order(cls.time).fetch(
                     cls.count_form(ancestor_key)
                     )
 
