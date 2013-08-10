@@ -6,7 +6,7 @@
 
 {% if auth == 'LOGGED_IN' %}
 
-<div class="col-6 col-lg-4">
+<div class="col col-lg-6">
 	<div class="panel">
 		<div class="panel-heading">
 			<h3><a href="/">Betweet.net</a></h3>
@@ -18,7 +18,7 @@
 	</div>
 </div>
 
-<div class="col-6 col-lg-4" ng-controller="fieldCtrl">
+<div class="col col-lg-6" ng-controller="fieldCtrl">
 	<div class="panel">
 		<div class="panel-heading">
 			<h3>Bet</h3>
@@ -62,7 +62,7 @@
 		
 		<div ng-repeat="bet in bets">
 			{% raw %}
-			<img src="{{ bet.avatar }}" width="33px" class="img-circle">
+			<a><img src="{{ bet.avatar }}" width="33px" class="img-circle"></a>
 			{% endraw %}
 		</div>
 	</div>
@@ -73,7 +73,7 @@
 
 {% if thisform['authenticated'] %}
 
-<div class="col-6 col-lg-4">
+<div class="col col-lg-6">
 	<div class="panel">
 		<div class="panel-heading">
 			<h3><a href="/">Betweet.net</a></h3>
@@ -86,7 +86,7 @@
 {% else %}
 
 
-<div class="col-6 col-lg-4" ng-controller="fieldCtrl">
+<div class="col col-lg-6" ng-controller="fieldCtrl">
 	<div class="panel">
 		<div class="panel-heading">
 			<h3>Bet</h3>
