@@ -9,7 +9,7 @@
 <div class="col col-lg-6">
 	<div class="panel">
 		<div class="panel-heading">
-			<h3><a href="/">Betweet.net</a></h3>
+			<h3 class="panel-title"><a href="/">Betweet.net</a></h3>
 		</div>
 	<p>{{ var.get('name') }} <img src="{{ var.get('profile_image_url') }}" width="33px">
 		<a href="/logout">Logout</a>
@@ -21,7 +21,7 @@
 <div class="col col-lg-6" ng-controller="FieldListCtrl">
 	<div class="panel">
 		<div class="panel-heading">
-			<h3>New bet</h3>
+			<h3 class="panel-title">New bet</h3>
 		</div>
 		<form name="data">
 			<input type="hidden"
@@ -97,7 +97,7 @@
 	{% raw %}		
 		<div class="panel-info">
 			<div class="panel-heading">
-				<h5>Preview</h5>		
+				<h5 class="panel-title">Preview</h5>		
 			</div>
 			<ul class="list-group">
 				<li class="list-group-item">
@@ -107,11 +107,12 @@
 				<li class="list-group-item" ng-repeat="field in fields">
 			<input type="checkbox" ng-model="field.Marked">				
 				{{ field.Descr }}
-			<select>
+			<select class="btn">
 				<option ng-repeat="choice in field.Val" value="choice">
 					{{ choice }}
 				</option>
 			</select>
+			<span class="caret"></span>
 			</li>
 			<li class="list-group-item text-right">
 				<form ng-submit="cleanFields()">
@@ -133,7 +134,7 @@
 <div class="col col-lg-6">
 	<div class="panel">
 		<div class="panel-heading">
-			<h3><a href="/">Betweet.net</a></h3>
+			<h3 class="panel-title"><a href="/">Betweet.net</a></h3>
 		</div>
 		<p>You must login to create bet forms. <a href="{{ var }}">Login</a></p>
 	</div>
